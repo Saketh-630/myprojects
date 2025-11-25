@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<!-- Top bar -->
+<div>
+    <a th:href="@{/}">User Home</a> |
+    <a th:href="@{/logout}">Logout</a>
+</div>
+<hr/>
+
+<h2>Admin Dashboard</h2>
+
+<p>
+    Logged in as:
+    <b th:text="${loggedInUser != null ? loggedInUser.name : 'Admin'}"></b>
+    (<span th:text="${loggedInUser != null ? loggedInUser.email : ''}"></span>)
+</p>
+
+<h3>Admin Controls</h3>
+
+<ul>
+    <li><a th:href="@{/admin/movies}">🎬 Manage Movies</a></li>
+    <li><a th:href="@{/admin/theatres}">🏛 Manage Theatres</a></li>
+    <li><a th:href="@{/admin/screens}">🖥 Manage Screens</a></li>
+    <li><a th:href="@{/admin/shows}">📅 Manage Shows</a></li>
+    <li><a th:href="@{/admin/bookings}">🎟 View All Bookings</a></li>
+</ul>
+
+<p>
+    Use the above links to control your movie system:<br/>
+    - First create <b>Theatres</b><br/>
+    - Then create <b>Screens</b> inside theatres<br/>
+    - Then add <b>Movies</b><br/>
+    - Finally schedule <b>Shows</b> (movie + screen + date/time)<br/>
+</p>
+
+</body>
+</html>

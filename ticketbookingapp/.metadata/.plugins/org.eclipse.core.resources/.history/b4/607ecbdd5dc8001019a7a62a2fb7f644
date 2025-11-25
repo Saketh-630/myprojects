@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Seat Selection</title>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="page-wrapper">
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="navbar-left">
+            <div class="navbar-title">Movie Booking</div>
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{'/movie/' + ${show.movie.id}}">Back to Movie</a>
+        </div>
+        <div class="navbar-right">
+            <a th:href="@{/booking/my-bookings}" class="btn btn-sm">My Bookings</a>
+            <a th:href="@{/logout}" class="btn btn-sm btn-danger">Logout</a>
+        </div>
+    </div>
+
+    <!-- DETAILS CARD -->
+    <div class="card">
+        <div class="card-title">Select Seats</div>
+        <p>
+            Movie: <b th:text="${show.movie.title}"></b><br/>
+            Theatre: <b th:text="${screen.theatre.name}"></b>
+            (<span th:text="${screen.theatre.city}"></span>)<br/>
+            Screen: <b th:text="${screen.name}"></b><br/>
+            Date: <b th:text="${show.showDate}"></b> ·
+            Time: <b th:text="${show.showTime}"></b>
+        </p>
+        <p>
+            Ticket Price:
+            <b id="ticketPrice" th:text="${show.ticketPrice}"></b>
+        </p>
+
+        <div th:if="${error}" class="alert alert-error">
+            <span th:text="${error}"></span>
+        </div>
+    </div>
+
+    <!-- SEAT LAYOUT -->
+    <div class="card mt-2 seat-layout-wrapper">
+
+        <div class="seat-legend">
+            Click on seats to select. Disabled seats are already booked.
+        </div>
+
+        <form th:action="@{/booking/confirm}" method="post">
+            <input type="hidden" name="showId" th:value="${show.id}"/>
+
+            <table class="seat-layout">
+                <tbody>
+                <tr th:each="row : ${#numbers.sequence(1, totalRows)}">
+                    <td class="seat-row-label">
+                        Row <span th:text="${row}"></span>
+                    </td>
+                    <td th:each="col : ${#numbers.sequence(1, seatsPerRow)}">
+                        <label>
+                            <input class="seat-checkbox"
+                                   type="checkbox"
+                                   name="selectedSeats"
+                                   th:value="${row + '-' + col}"
+                                   th:disabled="${bookedSeats.contains(row + '-' + col)}"/>
+                            <span class="seat-pill"
+                                  th:text="${'S' + row + '-' + col}"></span>
+                        </label>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div id="seatSummary" class="seat-summary">No seats selected.</div>
+
+            <div class="mt-2">
+                <button type="submit" class="btn btn-primary">
+                    Confirm Booking
+                </button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

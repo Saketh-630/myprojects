@@ -1,0 +1,132 @@
+package com.moviebooking.controller;
+
+import com.moviebooking.entity.Movie;
+import com.moviebooking.entity.Screen;
+import com.moviebooking.entity.Show;
+import com.moviebooking.entity.User;
+import com.moviebooking.service.MovieService;
+import com.moviebooking.service.ScreenService;
+import com.moviebooking.service.ShowService;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+
+@Controller
+@RequestMapping("/admin/shows")
+public class AdminShowController {
+
+    private final ShowService showService;
+    private final MovieService movieService;
+    private final ScreenService screenService;
+
+    public AdminShowController(ShowService showService,
+                               MovieService movieService,
+                               ScreenService screenService) {
+        this.showService = showService;
+        this.movieService = movieService;
+        this.screenService = screenService;
+    }
+
+    private boolean isAdmin(HttpSession session) {
+        User user = (User) session.getAttribute("loggedInUser");
+        return user != null && "ADMIN".equalsIgnoreCase(user.getRole());
+    }
+
+    @GetMapping
+    public String listShows(Model model, HttpSession session) {
+        if (!isAdmin(session)) return "redirect:/login";
+
+        List<Show> shows = showService.getAllShows();
+        model.addAttribute("shows", shows);
+        model.addAttribute("loggedInUser", session.getAttribute("loggedInUser"));
+        return "admin_show_list";
+    }
+
+    @GetMapping("/new")
+    public String showNewShowForm(Model model, HttpSession session) {
+        if (!isAdmin(session)) return "redirect:/login";
+
+        List<Movie> movies = movieService.getAllMovies();
+        List<Screen> screens = screenService.getAllScreens();
+
+        model.addAttribute("show", new Show());
+        model.addAttribute("movies", movies);
+        model.addAttribute("screens", screens);
+        model.addAttribute("loggedInUser", session.getAttribute("loggedInUser"));
+        return "admin_show_form";
+    }
+
+
+    
+    @PostMapping
+    public String saveShow(@RequestParam(value = "id", required = false) Long id,
+                           @RequestParam("movieId") Long movieId,
+                           @RequestParam("screenId") Long screenId,
+                           @RequestParam("showDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate showDate,
+                           @RequestParam("showTime") @DateTimeFormat(pattern = "HH:mm") LocalTime showTime,
+                           @RequestParam("ticketPrice") Double ticketPrice,
+                           HttpSession session) {
+
+        if (!isAdmin(session)) return "redirect:/login";
+
+        Movie movie = movieService.getMovieById(movieId);
+        Screen screen = screenService.getScreenById(screenId);
+
+        Show show;
+        if (id != null) {               // edit flow
+            show = showService.getShowById(id);
+            if (show == null) {
+                show = new Show();
+            }
+        } else {                        // create flow
+            show = new Show();
+        }
+
+        show.setMovie(movie);
+        show.setScreen(screen);
+        show.setShowDate(showDate);
+        show.setShowTime(showTime);
+        show.setTicketPrice(ticketPrice);
+
+        showService.saveShow(show);
+        return "redirect:/admin/shows";
+    }
+
+
+    @GetMapping("/edit/{id}")
+    public String editShow(@PathVariable Long id,
+                           Model model,
+                           HttpSession session) {
+        if (!isAdmin(session)) return "redirect:/login";
+
+        Show show = showService.getShowById(id);
+        if (show == null) return "redirect:/admin/shows";
+
+        List<Movie> movies = movieService.getAllMovies();
+        List<Screen> screens = screenService.getAllScreens();
+
+        model.addAttribute("show", show);
+        model.addAttribute("movies", movies);
+        model.addAttribute("screens", screens);
+        model.addAttribute("selectedMovieId", show.getMovie().getId());
+        model.addAttribute("selectedScreenId", show.getScreen().getId());
+        model.addAttribute("loggedInUser", session.getAttribute("loggedInUser"));
+        return "admin_show_form";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteShow(@PathVariable Long id,
+                             HttpSession session) {
+        if (!isAdmin(session)) return "redirect:/login";
+
+        showService.deleteShowById(id);
+        return "redirect:/admin/shows";
+    }
+}
+

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - Movie Form</title>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="page-wrapper">
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="navbar-left">
+            <div class="navbar-title">Admin Panel</div>
+            <a th:href="@{/admin/movies}">Movies</a>
+            <a th:href="@{/admin/dashboard}">Dashboard</a>
+        </div>
+        <div class="navbar-right">
+            <a th:href="@{/logout}" class="btn btn-sm btn-danger">Logout</a>
+        </div>
+    </div>
+
+    <!-- CARD -->
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title"
+                     th:text="${movie.id} != null ? 'Edit Movie' : 'Add Movie'">
+                </div>
+                <div class="card-subtitle">
+                    Enter movie details and attach a poster for better user experience.
+                </div>
+            </div>
+        </div>
+
+        <form th:action="@{/admin/movies}" th:object="${movie}" method="post" class="form-two-column">
+            <input type="hidden" th:field="*{id}"/>
+
+            <div class="form-two-column-grid">
+
+                <!-- Left + right fields -->
+                <div class="form-field">
+                    <label>Title</label>
+                    <input type="text" th:field="*{title}" required/>
+                </div>
+
+                <div class="form-field">
+                    <label>Language</label>
+                    <input type="text" th:field="*{language}" placeholder="e.g. Telugu, Hindi, English"/>
+                </div>
+
+                <div class="form-field">
+                    <label>Genre</label>
+                    <input type="text" th:field="*{genre}" placeholder="e.g. Action, Comedy, Drama"/>
+                </div>
+
+                <div class="form-field">
+                    <label>Duration (minutes)</label>
+                    <input type="number" th:field="*{durationMinutes}" min="1" placeholder="e.g. 150"/>
+                </div>
+
+                <div class="form-field">
+                    <label>Rating (U / UA / A)</label>
+                    <input type="text" th:field="*{rating}" placeholder="e.g. U/A"/>
+                </div>
+
+                <div class="form-field">
+                    <label>Status</label>
+                    <select th:field="*{status}">
+                        <option value="NOW_SHOWING">NOW_SHOWING</option>
+                        <option value="COMING_SOON">COMING_SOON</option>
+                    </select>
+                </div>
+
+                <div class="form-field full-width">
+                    <label>Description</label>
+                    <textarea th:field="*{description}" rows="4"
+                              placeholder="Short synopsis of the movie"></textarea>
+                </div>
+
+                <!-- Poster URL input -->
+                <div class="form-field">
+                    <label>Poster URL</label>
+                    <input type="text"
+                           id="posterUrlInput"
+                           th:field="*{posterUrl}"
+                           placeholder="https://example.com/poster.jpg"/>
+                    <small class="text-muted">
+                        Paste an image URL (e.g. from TMDB/IMDb/your CDN) to show on user side.
+                    </small>
+                </div>
+
+                <!-- Poster Preview -->
+                <div class="form-field">
+                    <label>Poster Preview</label>
+                    <img id="posterPreview"
+                         class="poster-preview"
+                         th:src="${movie.posterUrl}"
+                         alt="Poster preview"/>
+                    <div id="posterPreviewNote" class="text-muted mt-1">
+                        Paste an image URL to see the preview.
+                    </div>
+                </div>
+
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="margin-top:12px;">
+                Save Movie
+            </button>
+        </form>
+    </div>
+
+</div>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

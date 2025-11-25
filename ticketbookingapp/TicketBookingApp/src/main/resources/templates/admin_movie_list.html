@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - Movies</title>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="page-wrapper">
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="navbar-left">
+            <div class="navbar-title">Admin Panel</div>
+            <a th:href="@{/admin/dashboard}">Dashboard</a>
+        </div>
+        <div class="navbar-right">
+            <span th:if="${loggedInUser != null}">
+                <span class="text-muted">Admin:</span>
+                <span th:text="${loggedInUser.name}"></span>
+            </span>
+            <a th:href="@{/logout}" class="btn btn-sm btn-danger">Logout</a>
+        </div>
+    </div>
+
+    <!-- CARD -->
+    <div class="card">
+        <div class="admin-header">
+            <div>
+                <h2>Manage Movies</h2>
+                <div class="card-subtitle">
+                    Add, edit or remove movies available for booking.
+                </div>
+            </div>
+            <div>
+                <a th:href="@{/admin/movies/new}" class="btn btn-primary btn-sm">
+                    + Add New Movie
+                </a>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(movies)}">
+            <p class="text-muted mt-2">No movies found. Click "Add New Movie" to create one.</p>
+        </div>
+
+        <table th:if="${!#lists.isEmpty(movies)}">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Language</th>
+                <th>Genre</th>
+                <th>Duration</th>
+                <th>Status</th>
+                <th style="width: 140px;">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="movie : ${movies}">
+                <td th:text="${movie.id}"></td>
+                <td th:text="${movie.title}"></td>
+                <td th:text="${movie.language}"></td>
+                <td th:text="${movie.genre}"></td>
+                <td>
+                    <span th:text="${movie.durationMinutes}"></span> mins
+                </td>
+                <td th:text="${movie.status}"></td>
+                <td class="table-actions">
+                    <a th:href="@{'/admin/movies/edit/' + ${movie.id}}"
+                       class="btn btn-sm">
+                        Edit
+                    </a>
+                    <a th:href="@{'/admin/movies/delete/' + ${movie.id}}"
+                       class="btn btn-sm btn-danger"
+                       onclick="return confirm('Delete this movie?');">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Dashboard</title>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="page-wrapper">
+
+    <div class="navbar">
+        <div class="navbar-left">
+            <div class="navbar-title">Movie Booking</div>
+            <a th:href="@{/}">Home</a>
+        </div>
+        <div class="navbar-right">
+            <a th:href="@{/booking/my-bookings}" class="btn btn-sm">My Bookings</a>
+            <a th:href="@{/logout}" class="btn btn-sm btn-danger">Logout</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">User Dashboard</div>
+                <div class="card-subtitle">
+                    View your recent bookings and account information.
+                </div>
+            </div>
+        </div>
+
+        <p>
+            Logged in as:
+            <b th:text="${loggedInUser != null ? loggedInUser.name : ''}"></b>
+            (<span th:text="${loggedInUser != null ? loggedInUser.email : ''}"></span>)
+        </p>
+
+        <p class="mt-2">
+            <a th:href="@{/booking/my-bookings}" class="btn btn-primary btn-sm">
+                View My Bookings
+            </a>
+        </p>
+
+        <p class="text-muted mt-2">
+            You can also go to <a th:href="@{/}">Home</a> to browse and book more movies.
+        </p>
+    </div>
+
+</div>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

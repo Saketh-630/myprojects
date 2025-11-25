@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Theatre Form</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<div>
+    <a th:href="@{/admin/theatres}">Back to Theatres</a>
+</div>
+<hr/>
+
+<h2 th:text="${theatre.id} != null ? 'Edit Theatre' : 'Add Theatre'"></h2>
+
+<form th:action="@{/admin/theatres}" th:object="${theatre}" method="post">
+    <input type="hidden" th:field="*{id}"/>
+
+    <label>Name:</label>
+    <input type="text" th:field="*{name}" required/><br/><br/>
+
+    <label>City:</label>
+    <input type="text" th:field="*{city}"/><br/><br/>
+
+    <label>Address:</label><br/>
+    <textarea th:field="*{address}" rows="3" cols="40"></textarea><br/><br/>
+
+    <button type="submit">Save</button>
+</form>
+
+</body>
+</html>

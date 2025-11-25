@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Screen Form</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<div>
+    <a th:href="@{/admin/screens}">Back to Screens</a>
+</div>
+<hr/>
+
+<h2 th:text="${screen.id} != null ? 'Edit Screen' : 'Add Screen'"></h2>
+
+<form th:action="@{/admin/screens}" th:object="${screen}" method="post">
+    <input type="hidden" th:field="*{id}"/>
+
+    <label>Name:</label>
+    <input type="text" th:field="*{name}" required/><br/><br/>
+
+    <label>Theatre:</label>
+    <select name="theatreId" required>
+        <option value="">--select--</option>
+        <option th:each="t : ${theatres}"
+                th:value="${t.id}"
+                th:selected="${selectedTheatreId != null and selectedTheatreId == t.id}"
+                th:text="${t.name + ' (' + t.city + ')'}">
+        </option>
+    </select>
+    <br/><br/>
+
+    <label>Total Rows:</label>
+    <input type="number" th:field="*{totalRows}" min="1" required/><br/><br/>
+
+    <label>Seats per Row:</label>
+    <input type="number" th:field="*{seatsPerRow}" min="1" required/><br/><br/>
+
+    <button type="submit">Save</button>
+</form>
+
+</body>
+</html>

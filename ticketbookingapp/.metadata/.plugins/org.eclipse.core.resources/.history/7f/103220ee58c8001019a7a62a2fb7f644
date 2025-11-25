@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${movie.title} + ' - Details'">Movie Details</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+
+<!-- Simple navbar -->
+<div>
+    <a th:href="@{/}">Home</a> |
+    <a th:href="@{/}">Back to Movies</a>
+</div>
+<hr/>
+
+<h2 th:text="${movie.title}"></h2>
+<p th:text="${movie.description}"></p>
+
+<p>
+    <b>Language:</b> <span th:text="${movie.language}"></span> |
+    <b>Genre:</b> <span th:text="${movie.genre}"></span> |
+    <b>Duration:</b> <span th:text="${movie.durationMinutes}"></span> mins |
+    <b>Rating:</b> <span th:text="${movie.rating}"></span>
+</p>
+
+<h3>Shows</h3>
+
+<form th:action="@{'/movie/' + ${movie.id}}" method="get">
+    <label>Select date:</label>
+    <input type="date" name="date" th:value="${selectedDate}" />
+    <button type="submit">Go</button>
+</form>
+
+<br/>
+
+<div th:if="${#lists.isEmpty(shows)}">
+    <p>No shows available for selected date.</p>
+</div>
+
+<table th:if="${!#lists.isEmpty(shows)}" border="1" cellpadding="8">
+    <thead>
+    <tr>
+        <th>Time</th>
+        <th>Screen</th>
+        <th>Theatre</th>
+        <th>City</th>
+        <th>Ticket Price</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="show : ${shows}">
+        <td th:text="${show.showTime}"></td>
+        <td th:text="${show.screen.name}"></td>
+        <td th:text="${show.screen.theatre.name}"></td>
+        <td th:text="${show.screen.theatre.city}"></td>
+        <td th:text="${show.ticketPrice}"></td>
+        <td>
+            <!-- Booking flow will come later -->
+            <a th:href="@{'/booking/start/' + ${show.id}}">Book Now</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

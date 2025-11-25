@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - Screens</title>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="page-wrapper">
+
+    <div class="navbar">
+        <div class="navbar-left">
+            <div class="navbar-title">Admin Panel</div>
+            <a th:href="@{/admin/dashboard}">Dashboard</a>
+        </div>
+        <div class="navbar-right">
+            <span th:if="${loggedInUser != null}">
+                <span class="text-muted">Admin:</span>
+                <span th:text="${loggedInUser.name}"></span>
+            </span>
+            <a th:href="@{/logout}" class="btn btn-sm btn-danger">Logout</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="admin-header">
+            <div>
+                <h2>Manage Screens</h2>
+                <div class="card-subtitle">
+                    Define screens inside theatres with row/seat configuration.
+                </div>
+            </div>
+            <div>
+                <a th:href="@{/admin/screens/new}" class="btn btn-primary btn-sm">
+                    + Add New Screen
+                </a>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(screens)}">
+            <p class="text-muted mt-2">No screens found. Create theatres first, then add screens.</p>
+        </div>
+
+        <table th:if="${!#lists.isEmpty(screens)}">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Screen Name</th>
+                <th>Theatre</th>
+                <th>City</th>
+                <th>Total Rows</th>
+                <th>Seats / Row</th>
+                <th style="width: 140px;">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="s : ${screens}">
+                <td th:text="${s.id}"></td>
+                <td th:text="${s.name}"></td>
+                <td th:text="${s.theatre.name}"></td>
+                <td th:text="${s.theatre.city}"></td>
+                <td th:text="${s.totalRows}"></td>
+                <td th:text="${s.seatsPerRow}"></td>
+                <td class="table-actions">
+                    <a th:href="@{'/admin/screens/edit/' + ${s.id}}" class="btn btn-sm">
+                        Edit
+                    </a>
+                    <a th:href="@{'/admin/screens/delete/' + ${s.id}}"
+                       class="btn btn-sm btn-danger"
+                       onclick="return confirm('Delete this screen?');">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

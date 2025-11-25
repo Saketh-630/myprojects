@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Booking Success</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<div>
+    <a th:href="@{/}">Home</a> |
+    <a th:href="@{/booking/my-bookings}">My Bookings</a> |
+    <a th:href="@{/logout}">Logout</a>
+</div>
+<hr/>
+
+<h2>Booking Confirmed!</h2>
+
+<p>Booking ID: <b th:text="${booking.id}"></b></p>
+<p>Movie: <b th:text="${booking.show.movie.title}"></b></p>
+<p>
+    Theatre: <b th:text="${booking.show.screen.theatre.name}"></b>
+    (<span th:text="${booking.show.screen.theatre.city}"></span>)
+</p>
+<p>Screen: <b th:text="${booking.show.screen.name}"></b></p>
+<p>
+    Date: <b th:text="${booking.show.showDate}"></b> |
+    Time: <b th:text="${booking.show.showTime}"></b>
+</p>
+
+<p>
+    Seats:
+    <span th:each="s, iter : ${booking.seats}">
+        <span th:text="${'Row ' + s.seatRow + ' Seat ' + s.seatNumber}"></span><span th:if="${!iter.last}">, </span>
+    </span>
+</p>
+
+<p>Total Amount: <b th:text="${booking.totalAmount}"></b></p>
+
+<p>Thank you for booking!</p>
+
+</body>
+</html>

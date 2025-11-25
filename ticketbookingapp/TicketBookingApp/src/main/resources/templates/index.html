@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Movie Ticket Booking</title>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="page-wrapper">
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="navbar-left">
+            <div class="navbar-title">Movie Booking</div>
+            <a th:href="@{/}">Home</a>
+        </div>
+        <div class="navbar-right">
+            <span th:if="${loggedInUser == null}">
+                <a th:href="@{/login}" class="btn btn-sm">Login</a>
+                <a th:href="@{/register}" class="btn btn-sm btn-accent">Register</a>
+            </span>
+
+            <span th:if="${loggedInUser != null}">
+                <span class="text-muted">Hi,</span>
+                <span th:text="${loggedInUser.name}"></span>
+                <a th:href="@{/booking/my-bookings}" class="btn btn-sm">My Bookings</a>
+                <span th:if="${#strings.equalsIgnoreCase(loggedInUser.role, 'ADMIN')}">
+                    <a th:href="@{/admin/dashboard}" class="btn btn-sm btn-accent">Admin</a>
+                </span>
+                <a th:href="@{/logout}" class="btn btn-sm btn-danger">Logout</a>
+            </span>
+        </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Now Showing</div>
+                <div class="card-subtitle">Browse and book tickets for currently running movies</div>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(movies)}">
+            <p class="text-muted mt-2">No movies available at the moment.</p>
+        </div>
+
+       <div class="movie-list" th:if="${!#lists.isEmpty(movies)}">
+    <div class="movie-card" th:each="movie : ${movies}">
+        <div class="movie-card-body">
+            <!-- Poster -->
+            <div class="movie-card-poster-wrapper">
+                <img th:if="${movie.posterUrl != null}"
+                     th:src="${movie.posterUrl}"
+                     alt="Poster"
+                     class="movie-card-poster"/>
+
+                <div th:if="${movie.posterUrl == null}"
+                     class="movie-card-poster movie-card-poster-placeholder">
+                    No Poster
+                </div>
+            </div>
+
+            <!-- Text info -->
+            <div class="movie-card-info">
+                <h3 th:text="${movie.title}"></h3>
+                <div class="movie-meta">
+                    <span>Language: <span th:text="${movie.language}"></span></span> ·
+                    <span>Genre: <span th:text="${movie.genre}"></span></span> ·
+                    <span>Duration: <span th:text="${movie.durationMinutes}"></span> mins</span>
+                </div>
+                <p class="movie-desc" th:text="${movie.description}"></p>
+            </div>
+        </div>
+
+        <div class="card-actions mt-2">
+            <a th:href="@{'/movie/' + ${movie.id}}" class="btn btn-primary btn-sm">
+                View Details & Shows
+            </a>
+        </div>
+    </div>
+</div>
+
+
+</div>
+
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - Theatres</title>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="page-wrapper">
+
+    <div class="navbar">
+        <div class="navbar-left">
+            <div class="navbar-title">Admin Panel</div>
+            <a th:href="@{/admin/dashboard}">Dashboard</a>
+        </div>
+        <div class="navbar-right">
+            <span th:if="${loggedInUser != null}">
+                <span class="text-muted">Admin:</span>
+                <span th:text="${loggedInUser.name}"></span>
+            </span>
+            <a th:href="@{/logout}" class="btn btn-sm btn-danger">Logout</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="admin-header">
+            <div>
+                <h2>Manage Theatres</h2>
+                <div class="card-subtitle">
+                    Add and manage theatre locations for your shows.
+                </div>
+            </div>
+            <div>
+                <a th:href="@{/admin/theatres/new}" class="btn btn-primary btn-sm">
+                    + Add New Theatre
+                </a>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(theatres)}">
+            <p class="text-muted mt-2">No theatres found. Click "Add New Theatre" to create one.</p>
+        </div>
+
+        <table th:if="${!#lists.isEmpty(theatres)}">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>City</th>
+                <th>Address</th>
+                <th style="width: 140px;">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="t : ${theatres}">
+                <td th:text="${t.id}"></td>
+                <td th:text="${t.name}"></td>
+                <td th:text="${t.city}"></td>
+                <td th:text="${t.address}"></td>
+                <td class="table-actions">
+                    <a th:href="@{'/admin/theatres/edit/' + ${t.id}}" class="btn btn-sm">
+                        Edit
+                    </a>
+                    <a th:href="@{'/admin/theatres/delete/' + ${t.id}}"
+                       class="btn btn-sm btn-danger"
+                       onclick="return confirm('Delete this theatre?');">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

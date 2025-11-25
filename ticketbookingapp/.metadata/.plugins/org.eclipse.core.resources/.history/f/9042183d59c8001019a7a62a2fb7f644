@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - Movies</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<div>
+    <a th:href="@{/admin/dashboard}">Admin Home</a> |
+    <a th:href="@{/logout}">Logout</a>
+</div>
+<hr/>
+
+<h2>Manage Movies</h2>
+
+<a th:href="@{/admin/movies/new}">Add New Movie</a>
+<br/><br/>
+
+<table border="1" cellpadding="8">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Language</th>
+        <th>Genre</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="movie : ${movies}">
+        <td th:text="${movie.id}"></td>
+        <td th:text="${movie.title}"></td>
+        <td th:text="${movie.language}"></td>
+        <td th:text="${movie.genre}"></td>
+        <td th:text="${movie.status}"></td>
+        <td>
+            <a th:href="@{'/admin/movies/edit/' + ${movie.id}}">Edit</a> |
+            <a th:href="@{'/admin/movies/delete/' + ${movie.id}}"
+               onclick="return confirm('Delete this movie?');">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

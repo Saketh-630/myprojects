@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - Theatres</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<div>
+    <a th:href="@{/admin/dashboard}">Admin Home</a> |
+    <a th:href="@{/logout}">Logout</a>
+</div>
+<hr/>
+
+<h2>Manage Theatres</h2>
+
+<a th:href="@{/admin/theatres/new}">Add New Theatre</a>
+<br/><br/>
+
+<table border="1" cellpadding="8">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>City</th>
+        <th>Address</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="t : ${theatres}">
+        <td th:text="${t.id}"></td>
+        <td th:text="${t.name}"></td>
+        <td th:text="${t.city}"></td>
+        <td th:text="${t.address}"></td>
+        <td>
+            <a th:href="@{'/admin/theatres/edit/' + ${t.id}}">Edit</a> |
+            <a th:href="@{'/admin/theatres/delete/' + ${t.id}}"
+               onclick="return confirm('Delete this theatre?');">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

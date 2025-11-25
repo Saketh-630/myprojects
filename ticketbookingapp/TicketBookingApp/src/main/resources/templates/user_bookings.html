@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Bookings</title>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="page-wrapper">
+
+    <div class="navbar">
+        <div class="navbar-left">
+            <div class="navbar-title">Movie Booking</div>
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{/user/home}">Dashboard</a>
+        </div>
+        <div class="navbar-right">
+            <a th:href="@{/logout}" class="btn btn-sm btn-danger">Logout</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">My Bookings</div>
+                <div class="card-subtitle">
+                    All your past and upcoming ticket bookings.
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(bookings)}">
+            <p class="text-muted mt-2">You have not booked any tickets yet.</p>
+        </div>
+
+        <table th:if="${!#lists.isEmpty(bookings)}">
+            <thead>
+            <tr>
+                <th>Booking ID</th>
+                <th>Movie</th>
+                <th>Theatre</th>
+                <th>Screen</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Seats</th>
+                <th>Total Amount</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="b : ${bookings}">
+                <td th:text="${b.id}"></td>
+                <td th:text="${b.show.movie.title}"></td>
+                <td th:text="${b.show.screen.theatre.name}"></td>
+                <td th:text="${b.show.screen.name}"></td>
+                <td th:text="${b.show.showDate}"></td>
+                <td th:text="${b.show.showTime}"></td>
+             <td>
+    <span th:each="s, iter : ${b.seats}">
+        <span th:text="${#strings.substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ', s.seatRow-1, s.seatRow) + s.seatNumber}"></span>
+        <span th:if="${!iter.last}">, </span>
+    </span>
+</td>
+
+                <td th:text="${b.totalAmount}"></td>
+                <td th:text="${b.status}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

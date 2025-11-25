@@ -1,0 +1,64 @@
+document.addEventListener("DOMContentLoaded", function () {
+    handleSeatSelectionSummary();
+});
+
+/**
+ * Convert internal "row-col" like "1-3" to "A3"
+ */
+function seatCodeFromValue(v) {
+    if (typeof v !== "string") return v;
+    if (!v.includes("-")) return v;
+
+    const [rowStr, colStr] = v.split("-");
+    const rowNum = parseInt(rowStr, 10);
+    if (isNaN(rowNum)) return v;
+
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const idx = rowNum - 1;
+    if (idx < 0 || idx >= letters.length) return v;
+
+    return letters[idx] + colStr;
+}
+
+/**
+ * Show count + total price for selected seats on booking_seats.html
+ */
+function handleSeatSelectionSummary() {
+    const seatCheckboxes = document.querySelectorAll('input[name="selectedSeats"]');
+    if (!seatCheckboxes || seatCheckboxes.length === 0) return; // not on seat page
+
+    const summaryEl = document.getElementById("seatSummary");
+    if (!summaryEl) return;
+
+    let ticketPrice = 0;
+    const priceEl = document.getElementById("ticketPrice") ||
+        document.querySelector("[data-ticket-price]");
+    if (priceEl) {
+        const raw = priceEl.textContent || priceEl.value || priceEl.getAttribute("data-ticket-price");
+        const parsed = parseFloat(raw);
+        if (!isNaN(parsed)) ticketPrice = parsed;
+    }
+
+    function updateSummary() {
+        const selected = Array.from(seatCheckboxes).filter(cb => cb.checked);
+        const count = selected.length;
+
+        if (count === 0) {
+            summaryEl.textContent = "No seats selected.";
+            return;
+        }
+
+        const seatLabels = selected.map(cb => seatCodeFromValue(cb.value));
+        let text = `Selected ${count} seat(s): ${seatLabels.join(", ")}`;
+
+        if (ticketPrice > 0) {
+            const total = (ticketPrice * count).toFixed(2);
+            text += ` | Estimated total: ${total}`;
+        }
+
+        summaryEl.textContent = text;
+    }
+
+    seatCheckboxes.forEach(cb => cb.addEventListener("change", updateSummary));
+    updateSummary();
+}

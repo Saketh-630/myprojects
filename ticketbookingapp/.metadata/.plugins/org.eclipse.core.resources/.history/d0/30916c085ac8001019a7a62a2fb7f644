@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - Screens</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<div>
+    <a th:href="@{/admin/dashboard}">Admin Home</a> |
+    <a th:href="@{/logout}">Logout</a>
+</div>
+<hr/>
+
+<h2>Manage Screens</h2>
+
+<a th:href="@{/admin/screens/new}">Add New Screen</a>
+<br/><br/>
+
+<table border="1" cellpadding="8">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Theatre</th>
+        <th>City</th>
+        <th>Total Rows</th>
+        <th>Seats/Row</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="s : ${screens}">
+        <td th:text="${s.id}"></td>
+        <td th:text="${s.name}"></td>
+        <td th:text="${s.theatre.name}"></td>
+        <td th:text="${s.theatre.city}"></td>
+        <td th:text="${s.totalRows}"></td>
+        <td th:text="${s.seatsPerRow}"></td>
+        <td>
+            <a th:href="@{'/admin/screens/edit/' + ${s.id}}">Edit</a> |
+            <a th:href="@{'/admin/screens/delete/' + ${s.id}}"
+               onclick="return confirm('Delete this screen?');">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

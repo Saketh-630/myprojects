@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Seat Selection</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<div>
+    <a th:href="@{/}">Home</a> |
+    <a th:href="@{'/movie/' + ${show.movie.id}}">Back to Movie</a> |
+    <a th:href="@{/logout}">Logout</a>
+</div>
+<hr/>
+
+<h2>Select Seats</h2>
+
+<p>
+    Movie: <b th:text="${show.movie.title}"></b><br/>
+    Theatre: <b th:text="${screen.theatre.name}"></b>
+    (<span th:text="${screen.theatre.city}"></span>)<br/>
+    Screen: <b th:text="${screen.name}"></b><br/>
+    Date: <b th:text="${show.showDate}"></b> |
+    Time: <b th:text="${show.showTime}"></b><br/>
+    Ticket Price: <b th:text="${show.ticketPrice}"></b>
+</p>
+
+<div th:if="${error}">
+    <p th:text="${error}" style="color:red;"></p>
+</div>
+
+<form th:action="@{/booking/confirm}" method="post">
+    <input type="hidden" name="showId" th:value="${show.id}"/>
+
+    <p>Screen Layout (click seats to select):</p>
+
+    <table border="1" cellpadding="5">
+        <tbody>
+        <tr th:each="row : ${#numbers.sequence(1, totalRows)}">
+            <td>Row <span th:text="${row}"></span></td>
+            <td th:each="col : ${#numbers.sequence(1, seatsPerRow)}">
+                <label>
+                    <input type="checkbox"
+                           name="selectedSeats"
+                           th:value="${row + '-' + col}"
+                           th:disabled="${bookedSeats.contains(row + '-' + col)}"/>
+                    <span th:text="${'S' + row + '-' + col}"></span>
+                </label>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p style="margin-top:10px;">
+        <button type="submit">Confirm Booking</button>
+    </p>
+</form>
+
+<p><i>Greyed/disabled seats are already booked.</i></p>
+
+</body>
+</html>

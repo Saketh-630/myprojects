@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${movie.title} + ' - Details'">Movie Details</title>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="page-wrapper">
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="navbar-left">
+            <div class="navbar-title">Movie Booking</div>
+            <a th:href="@{/}">Home</a>
+        </div>
+        <div class="navbar-right">
+            <span th:if="${loggedInUser == null}">
+                <a th:href="@{/login}" class="btn btn-sm">Login</a>
+                <a th:href="@{/register}" class="btn btn-sm btn-accent">Register</a>
+            </span>
+            <span th:if="${loggedInUser != null}">
+                <span class="text-muted">Hi,</span>
+                <span th:text="${loggedInUser.name}"></span>
+                <a th:href="@{/booking/my-bookings}" class="btn btn-sm">My Bookings</a>
+                <span th:if="${#strings.equalsIgnoreCase(loggedInUser.role, 'ADMIN')}">
+                    <a th:href="@{/admin/dashboard}" class="btn btn-sm btn-accent">Admin</a>
+                </span>
+                <a th:href="@{/logout}" class="btn btn-sm btn-danger">Logout</a>
+            </span>
+        </div>
+    </div>
+
+    <!-- MOVIE DETAILS CARD -->
+    <div class="card">
+        <div class="details-header">
+            <h2 th:text="${movie.title}"></h2>
+            <p class="details-meta">
+                <b>Language:</b> <span th:text="${movie.language}"></span> ·
+                <b>Genre:</b> <span th:text="${movie.genre}"></span> ·
+                <b>Duration:</b> <span th:text="${movie.durationMinutes}"></span> mins ·
+                <b>Rating:</b> <span th:text="${movie.rating}"></span>
+            </p>
+        </div>
+        <p th:text="${movie.description}"></p>
+    </div>
+
+    <!-- SHOWS CARD -->
+    <div class="card mt-3">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Available Shows</div>
+                <div class="card-subtitle">
+                    Select a date and choose your preferred show time & theatre.
+                </div>
+            </div>
+        </div>
+
+        <form th:action="@{'/movie/' + ${movie.id}}" method="get" class="show-date-form">
+            <label>Select date:</label>
+            <input type="date" name="date" th:value="${selectedDate}" />
+            <button type="submit" class="btn btn-sm btn-primary">Go</button>
+        </form>
+
+        <div th:if="${#lists.isEmpty(shows)}">
+            <p class="text-muted mt-2">No shows available for the selected date.</p>
+        </div>
+
+        <table th:if="${!#lists.isEmpty(shows)}">
+            <thead>
+            <tr>
+                <th>Time</th>
+                <th>Screen</th>
+                <th>Theatre</th>
+                <th>City</th>
+                <th>Ticket Price</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="show : ${shows}">
+                <td th:text="${show.showTime}"></td>
+                <td th:text="${show.screen.name}"></td>
+                <td th:text="${show.screen.theatre.name}"></td>
+                <td th:text="${show.screen.theatre.city}"></td>
+                <td th:text="${show.ticketPrice}"></td>
+                <td class="table-actions">
+                    <a th:href="@{'/booking/start/' + ${show.id}}" class="btn btn-sm btn-primary">
+                        Book Now
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

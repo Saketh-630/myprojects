@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Movie Ticket Booking</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+
+<!-- Navbar -->
+<div>
+    <a th:href="@{/}">Home</a>
+
+    <span th:if="${loggedInUser == null}">
+        | <a th:href="@{/login}">Login</a>
+        | <a th:href="@{/register}">Register</a>
+    </span>
+
+    <span th:if="${loggedInUser != null}">
+        | Welcome, <span th:text="${loggedInUser.name}"></span>
+        | <a th:href="@{/user/home}">My Account</a>
+        <span th:if="${#strings.equalsIgnoreCase(loggedInUser.role, 'ADMIN')}">
+            | <a th:href="@{/admin/dashboard}">Admin</a>
+        </span>
+        | <a th:href="@{/logout}">Logout</a>
+    </span>
+</div>
+
+<hr/>
+
+<h2>Now Showing</h2>
+
+<div th:if="${#lists.isEmpty(movies)}">
+    <p>No movies available.</p>
+</div>
+
+<div th:each="movie : ${movies}" style="border:1px solid #ccc; padding:10px; margin:10px 0;">
+    <h3 th:text="${movie.title}"></h3>
+    <p th:text="${movie.description}"></p>
+    <p>
+        <b>Language:</b> <span th:text="${movie.language}"></span> |
+        <b>Genre:</b> <span th:text="${movie.genre}"></span> |
+        <b>Duration:</b> <span th:text="${movie.durationMinutes}"></span> mins
+    </p>
+    <a th:href="@{'/movie/' + ${movie.id}}">View Details & Shows</a>
+</div>
+
+</body>
+</html>

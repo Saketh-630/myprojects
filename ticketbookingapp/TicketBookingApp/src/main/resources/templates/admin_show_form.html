@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Show Form</title>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="page-wrapper">
+
+    <div class="navbar">
+        <div class="navbar-left">
+            <div class="navbar-title">Admin Panel</div>
+            <a th:href="@{/admin/shows}">Shows</a>
+            <a th:href="@{/admin/dashboard}">Dashboard</a>
+        </div>
+        <div class="navbar-right">
+            <a th:href="@{/logout}" class="btn btn-sm btn-danger">Logout</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title"
+                     th:text="${show.id} != null ? 'Edit Show' : 'Add Show'">
+                </div>
+                <div class="card-subtitle">
+                    Select movie, screen, date, time and ticket price.
+                </div>
+            </div>
+        </div>
+
+        <form th:action="@{/admin/shows}" method="post">
+            <input type="hidden" name="id" th:value="${show.id}"/>
+
+            <label>Movie</label>
+            <select name="movieId" required>
+                <option value="">-- select movie --</option>
+                <option th:each="m : ${movies}"
+                        th:value="${m.id}"
+                        th:selected="${show.movie != null and show.movie.id == m.id}"
+                        th:text="${m.title}">
+                </option>
+            </select>
+
+            <label>Screen</label>
+            <select name="screenId" required>
+                <option value="">-- select screen --</option>
+                <option th:each="s : ${screens}"
+                        th:value="${s.id}"
+                        th:selected="${show.screen != null and show.screen.id == s.id}"
+                        th:text="${s.name + ' - ' + s.theatre.name + ' (' + s.theatre.city + ')'}">
+                </option>
+            </select>
+
+            <label>Date</label>
+            <input type="date" name="showDate" th:value="${show.showDate}"/>
+
+            <label>Time</label>
+            <input type="time" name="showTime" th:value="${show.showTime}"/>
+
+            <label>Ticket Price</label>
+            <input type="number" step="0.01" name="ticketPrice" th:value="${show.ticketPrice}"/>
+
+            <button type="submit" class="btn btn-primary" style="margin-top:6px;">
+                Save Show
+            </button>
+        </form>
+    </div>
+
+</div>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

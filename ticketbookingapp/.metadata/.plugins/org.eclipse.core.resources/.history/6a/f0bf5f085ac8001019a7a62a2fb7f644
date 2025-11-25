@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Home</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<div>
+    <a th:href="@{/}">Home</a> |
+    <a th:href="@{/logout}">Logout</a>
+</div>
+<hr/>
+
+<h2>User Dashboard</h2>
+
+<p th:if="${loggedInUser != null}">
+    Logged in as: <b th:text="${loggedInUser.email}"></b>
+</p>
+
+<p>
+    (Later we will show booking history here)
+</p>
+
+</body>
+</html>

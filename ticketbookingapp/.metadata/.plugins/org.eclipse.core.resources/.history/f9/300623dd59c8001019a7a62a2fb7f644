@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - All Bookings</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<div>
+    <a th:href="@{/admin/dashboard}">Admin Home</a> |
+    <a th:href="@{/logout}">Logout</a>
+</div>
+<hr/>
+
+<h2>All Bookings</h2>
+
+<div th:if="${#lists.isEmpty(bookings)}">
+    <p>No bookings found.</p>
+</div>
+
+<table th:if="${!#lists.isEmpty(bookings)}" border="1" cellpadding="8">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>User</th>
+        <th>Email</th>
+        <th>Movie</th>
+        <th>Theatre</th>
+        <th>Screen</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Seats</th>
+        <th>Total Amount</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="b : ${bookings}">
+        <td th:text="${b.id}"></td>
+        <td th:text="${b.user.name}"></td>
+        <td th:text="${b.user.email}"></td>
+        <td th:text="${b.show.movie.title}"></td>
+        <td th:text="${b.show.screen.theatre.name}"></td>
+        <td th:text="${b.show.screen.name}"></td>
+        <td th:text="${b.show.showDate}"></td>
+        <td th:text="${b.show.showTime}"></td>
+        <td>
+            <span th:each="s, iter : ${b.seats}">
+                <span th:text="${'R' + s.seatRow + '-S' + s.seatNumber}"></span><span th:if="${!iter.last}">, </span>
+            </span>
+        </td>
+        <td th:text="${b.totalAmount}"></td>
+        <td th:text="${b.status}"></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<div>
+    <a th:href="@{/}">Home</a> |
+    <a th:href="@{/admin/movies}">Manage Movies</a> |
+    <a th:href="@{/logout}">Logout</a>
+</div>
+<hr/>
+
+<h2>Admin Dashboard</h2>
+
+<p>Welcome, <span th:text="${loggedInUser.name}"></span>!</p>
+
+<p>Use the links above to manage movies, theatres, screens, shows (we will add them step-by-step).</p>
+
+</body>
+</html>

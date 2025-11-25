@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Seat Selection</title>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="page-wrapper">
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="navbar-left">
+            <div class="navbar-title">Movie Booking</div>
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{'/movie/' + ${show.movie.id}}">Back to Movie</a>
+        </div>
+        <div class="navbar-right">
+            <a th:href="@{/booking/my-bookings}" class="btn btn-sm">My Bookings</a>
+            <a th:href="@{/logout}" class="btn btn-sm btn-danger">Logout</a>
+        </div>
+    </div>
+
+<!-- DETAILS + POSTER CARD -->
+<div class="card booking-header-card">
+    <!-- Poster area -->
+    <div class="booking-header-left">
+        <!-- If poster URL is present -->
+        <img th:if="${show.movie.posterUrl != null}"
+             th:src="${show.movie.posterUrl}"
+             alt="Movie Poster"
+             class="poster-preview"/>
+
+        <!-- Fallback if no poster -->
+        <div th:if="${show.movie.posterUrl == null}" class="poster-preview poster-preview-placeholder">
+            No poster available
+        </div>
+    </div>
+
+    <!-- Text details -->
+    <div class="booking-header-right">
+        <div class="card-title">Select Seats</div>
+
+        <h3 th:text="${show.movie.title}"></h3>
+        <p class="details-meta">
+            <span th:text="${show.movie.genre}"></span> ·
+            <span th:text="${show.movie.language}"></span> ·
+            <span th:text="${show.movie.durationMinutes + ' min'}"></span>
+        </p>
+
+        <p>
+            Theatre:
+            <b th:text="${screen.theatre.name}"></b>
+            (<span th:text="${screen.theatre.city}"></span>)<br/>
+
+            Screen:
+            <b th:text="${screen.name}"></b><br/>
+
+            Date:
+            <b th:text="${show.showDate}"></b> ·
+            Time:
+            <b th:text="${show.showTime}"></b>
+        </p>
+
+        <p>
+            Base Ticket Price:
+            <b id="ticketPrice" th:text="${show.ticketPrice}"></b>
+        </p>
+
+        <div th:if="${error}" class="alert alert-error">
+            <span th:text="${error}"></span>
+        </div>
+    </div>
+</div>
+
+
+    <!-- SEAT LAYOUT -->
+<div class="card mt-2 seat-layout-wrapper">
+
+    <!-- Legend with different prices -->
+    <div class="seat-legend">
+        <div class="seat-legend-row">
+            <span class="seat-legend-pill premium"></span>
+            <span>
+                Premium rows –
+                <b th:text="${show.ticketPrice + 50}"></b>
+            </span>
+        </div>
+        <div class="seat-legend-row">
+            <span class="seat-legend-pill gold"></span>
+            <span>
+                Gold rows –
+                <b th:text="${show.ticketPrice}"></b>
+            </span>
+        </div>
+        <div class="seat-legend-row">
+            <span class="seat-legend-pill standard"></span>
+            <span>
+                Standard rows –
+                <b th:text="${show.ticketPrice - 30}"></b>
+            </span>
+        </div>
+        <div class="seat-legend-row">
+            <span class="seat-legend-pill booked"></span>
+            <span>Booked</span>
+        </div>
+    </div>
+
+    <div class="text-muted mt-1">
+        Back rows start at <b>A</b> (top), front rows are the last letters (bottom, near screen).
+        Seats are labelled like <b>A1, A2, B3…</b>
+    </div>
+
+    <form th:action="@{/booking/confirm}" method="post" class="mt-2">
+        <input type="hidden" name="showId" th:value="${show.id}"/>
+
+        <!-- SEAT TABLE (takes most of the card width) -->
+        <table class="seat-layout">
+            <tbody>
+            <tr th:each="row : ${#numbers.sequence(1, totalRows)}"
+                th:with="aisleCol=${seatsPerRow / 2}">
+
+                <!-- Row label A, B, C... (top = far from screen) -->
+                <td class="seat-row-label">
+                    Row
+                    <span th:text="${#strings.substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ', row-1, row)}"></span>
+                </td>
+
+                <!-- seats: 1..seatsPerRow -->
+                <td th:each="col : ${#numbers.sequence(1, seatsPerRow)}">
+
+                    <!-- Aisle gap in the middle -->
+                    <div th:if="${col == aisleCol}" class="seat-aisle"></div>
+
+                    <!-- Real seat -->
+                    <label th:if="${col != aisleCol}">
+                        <!-- internal value used by backend: 'row-col' (e.g. 1-3) -->
+                        <input class="seat-checkbox"
+                               type="checkbox"
+                               name="selectedSeats"
+                               th:value="${row + '-' + col}"
+                               th:attr="data-price=${row <= 2 ? show.ticketPrice + 50 : (row <= 5 ? show.ticketPrice : show.ticketPrice - 30)}"
+                               th:disabled="${bookedSeats.contains(row + '-' + col)}"/>
+
+                        <!-- visual label: A1, B5 etc -->
+                        <span class="seat-pill"
+                              th:classappend="${row <= 2} ? ' seat-premium' : (${row <= 5} ? ' seat-gold' : ' seat-standard')"
+                              th:text="${#strings.substring('ABCDEFGHIJKLMNOPQRSTUVWXYZ', row-1, row) + col}">
+                        </span>
+                    </label>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- REALISTIC SCREEN AT THE BOTTOM, FULL WIDTH -->
+        <div class="screen-container">
+            <div class="screen-inner">
+                <div class="screen-bar"></div>
+                <div class="screen-label">SCREEN THIS SIDE</div>
+            </div>
+        </div>
+
+        <div id="seatSummary" class="seat-summary">No seats selected.</div>
+
+        <div class="mt-2">
+            <button type="submit" class="btn btn-primary">
+                Confirm Booking
+            </button>
+        </div>
+    </form>
+
+    <div class="text-muted mt-1">
+        Top rows (A, B...) are far from the screen, bottom rows (last letters) are closest to the screen.
+    </div>
+</div>
+
+
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

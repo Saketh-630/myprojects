@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - Shows</title>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="page-wrapper">
+
+    <div class="navbar">
+        <div class="navbar-left">
+            <div class="navbar-title">Admin Panel</div>
+            <a th:href="@{/admin/dashboard}">Dashboard</a>
+        </div>
+        <div class="navbar-right">
+            <span th:if="${loggedInUser != null}">
+                <span class="text-muted">Admin:</span>
+                <span th:text="${loggedInUser.name}"></span>
+            </span>
+            <a th:href="@{/logout}" class="btn btn-sm btn-danger">Logout</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="admin-header">
+            <div>
+                <h2>Manage Shows</h2>
+                <div class="card-subtitle">
+                    Create and manage showtimes for movies in different screens.
+                </div>
+            </div>
+            <div>
+                <a th:href="@{/admin/shows/new}" class="btn btn-primary btn-sm">
+                    + Add New Show
+                </a>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(shows)}">
+            <p class="text-muted mt-2">No shows found. Create movies and screens first.</p>
+        </div>
+
+        <table th:if="${!#lists.isEmpty(shows)}">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Movie</th>
+                <th>Theatre</th>
+                <th>Screen</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Ticket Price</th>
+                <th style="width: 140px;">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="show : ${shows}">
+                <td th:text="${show.id}"></td>
+                <td th:text="${show.movie.title}"></td>
+                <td th:text="${show.screen.theatre.name}"></td>
+                <td th:text="${show.screen.name}"></td>
+                <td th:text="${show.showDate}"></td>
+                <td th:text="${show.showTime}"></td>
+                <td th:text="${show.ticketPrice}"></td>
+                <td class="table-actions">
+                    <a th:href="@{'/admin/shows/edit/' + ${show.id}}" class="btn btn-sm">
+                        Edit
+                    </a>
+                    <a th:href="@{'/admin/shows/delete/' + ${show.id}}"
+                       class="btn btn-sm btn-danger"
+                       onclick="return confirm('Delete this show?');">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

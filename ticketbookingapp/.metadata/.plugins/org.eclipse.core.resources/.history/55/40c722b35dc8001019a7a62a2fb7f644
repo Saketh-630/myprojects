@@ -1,0 +1,54 @@
+// Basic global script for the Movie Booking app
+
+document.addEventListener("DOMContentLoaded", function () {
+    handleSeatSelectionSummary();
+});
+
+/**
+ * Show count + total price for selected seats on booking_seats.html
+ * Expects:
+ *  - checkboxes named "selectedSeats"
+ *  - an element with id "seatSummary"
+ *  - an element with id "ticketPrice" or [data-ticket-price] (optional)
+ */
+function handleSeatSelectionSummary() {
+    const seatCheckboxes = document.querySelectorAll('input[name="selectedSeats"]');
+    if (!seatCheckboxes || seatCheckboxes.length === 0) return; // not on seat page
+
+    const summaryEl = document.getElementById("seatSummary");
+    if (!summaryEl) return;
+
+    // Try to read price from element with id or data attribute (optional)
+    let ticketPrice = 0;
+    const priceEl = document.getElementById("ticketPrice") ||
+                    document.querySelector("[data-ticket-price]");
+    if (priceEl) {
+        const parsed = parseFloat(priceEl.textContent || priceEl.value || priceEl.getAttribute("data-ticket-price"));
+        if (!isNaN(parsed)) {
+            ticketPrice = parsed;
+        }
+    }
+
+    function updateSummary() {
+        const selected = Array.from(seatCheckboxes).filter(cb => cb.checked);
+        const count = selected.length;
+
+        if (count === 0) {
+            summaryEl.textContent = "No seats selected.";
+            return;
+        }
+
+        const seatLabels = selected.map(cb => cb.value); // row-seat format
+        let text = `Selected ${count} seat(s): ${seatLabels.join(", ")}`;
+
+        if (ticketPrice > 0) {
+            const total = (ticketPrice * count).toFixed(2);
+            text += ` | Estimated total: ${total}`;
+        }
+
+        summaryEl.textContent = text;
+    }
+
+    seatCheckboxes.forEach(cb => cb.addEventListener("change", updateSummary));
+    updateSummary();
+}

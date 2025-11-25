@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - Shows</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<div>
+    <a th:href="@{/admin/dashboard}">Admin Home</a> |
+    <a th:href="@{/logout}">Logout</a>
+</div>
+<hr/>
+
+<h2>Manage Shows</h2>
+
+<a th:href="@{/admin/shows/new}">Add New Show</a>
+<br/><br/>
+
+<table border="1" cellpadding="8">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Movie</th>
+        <th>Theatre</th>
+        <th>Screen</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Ticket Price</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="show : ${shows}">
+        <td th:text="${show.id}"></td>
+        <td th:text="${show.movie.title}"></td>
+        <td th:text="${show.screen.theatre.name}"></td>
+        <td th:text="${show.screen.name}"></td>
+        <td th:text="${show.showDate}"></td>
+        <td th:text="${show.showTime}"></td>
+        <td th:text="${show.ticketPrice}"></td>
+        <td>
+            <a th:href="@{'/admin/shows/edit/' + ${show.id}}">Edit</a> |
+            <a th:href="@{'/admin/shows/delete/' + ${show.id}}"
+               onclick="return confirm('Delete this show?');">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

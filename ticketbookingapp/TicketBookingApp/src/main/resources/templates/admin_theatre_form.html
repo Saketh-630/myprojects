@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Theatre Form</title>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="page-wrapper">
+
+    <div class="navbar">
+        <div class="navbar-left">
+            <div class="navbar-title">Admin Panel</div>
+            <a th:href="@{/admin/theatres}">Theatres</a>
+            <a th:href="@{/admin/dashboard}">Dashboard</a>
+        </div>
+        <div class="navbar-right">
+            <a th:href="@{/logout}" class="btn btn-sm btn-danger">Logout</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title"
+                     th:text="${theatre.id} != null ? 'Edit Theatre' : 'Add Theatre'">
+                </div>
+                <div class="card-subtitle">
+                    Provide theatre name, city and address details.
+                </div>
+            </div>
+        </div>
+
+        <form th:action="@{/admin/theatres}" th:object="${theatre}" method="post">
+            <input type="hidden" th:field="*{id}"/>
+
+            <label>Name</label>
+            <input type="text" th:field="*{name}" required/>
+
+            <label>City</label>
+            <input type="text" th:field="*{city}"/>
+
+            <label>Address</label>
+            <textarea th:field="*{address}" rows="3"></textarea>
+
+            <button type="submit" class="btn btn-primary" style="margin-top:6px;">
+                Save Theatre
+            </button>
+        </form>
+    </div>
+
+</div>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

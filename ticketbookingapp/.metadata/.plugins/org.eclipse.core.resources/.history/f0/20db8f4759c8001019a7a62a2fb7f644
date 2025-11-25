@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - Movie Form</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<div>
+    <a th:href="@{/admin/movies}">Back to Movies</a> |
+    <a th:href="@{/admin/dashboard}">Admin Home</a>
+</div>
+<hr/>
+
+<h2 th:text="${movie.id} != null ? 'Edit Movie' : 'Add Movie'"></h2>
+
+<form th:action="@{/admin/movies}" th:object="${movie}" method="post">
+    <input type="hidden" th:field="*{id}"/>
+
+    <label>Title:</label>
+    <input type="text" th:field="*{title}" required/><br/><br/>
+
+    <label>Description:</label><br/>
+    <textarea th:field="*{description}" rows="4" cols="50"></textarea><br/><br/>
+
+    <label>Language:</label>
+    <input type="text" th:field="*{language}"/><br/><br/>
+
+    <label>Genre:</label>
+    <input type="text" th:field="*{genre}"/><br/><br/>
+
+    <label>Duration (minutes):</label>
+    <input type="number" th:field="*{durationMinutes}"/><br/><br/>
+
+    <label>Rating (U/UA/A):</label>
+    <input type="text" th:field="*{rating}"/><br/><br/>
+
+    <label>Status:</label>
+    <select th:field="*{status}">
+        <option value="NOW_SHOWING">NOW_SHOWING</option>
+        <option value="COMING_SOON">COMING_SOON</option>
+    </select><br/><br/>
+
+    <button type="submit">Save</button>
+</form>
+
+</body>
+</html>

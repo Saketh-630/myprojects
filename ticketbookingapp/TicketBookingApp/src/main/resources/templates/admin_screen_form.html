@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Screen Form</title>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="page-wrapper">
+
+    <div class="navbar">
+        <div class="navbar-left">
+            <div class="navbar-title">Admin Panel</div>
+            <a th:href="@{/admin/screens}">Screens</a>
+            <a th:href="@{/admin/dashboard}">Dashboard</a>
+        </div>
+        <div class="navbar-right">
+            <a th:href="@{/logout}" class="btn btn-sm btn-danger">Logout</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <div class="card-title"
+                     th:text="${screen.id} != null ? 'Edit Screen' : 'Add Screen'">
+                </div>
+                <div class="card-subtitle">
+                    Link this screen to a theatre and define seating layout.
+                </div>
+            </div>
+        </div>
+
+        <form th:action="@{/admin/screens}" th:object="${screen}" method="post">
+            <input type="hidden" th:field="*{id}"/>
+
+            <label>Screen Name</label>
+            <input type="text" th:field="*{name}" required/>
+
+            <label>Theatre</label>
+            <select name="theatreId" required>
+                <option value="">-- select theatre --</option>
+                <option th:each="t : ${theatres}"
+                        th:value="${t.id}"
+                        th:selected="${selectedTheatreId != null and selectedTheatreId == t.id}"
+                        th:text="${t.name + ' (' + t.city + ')'}">
+                </option>
+            </select>
+
+            <label>Total Rows</label>
+            <input type="number" th:field="*{totalRows}" min="1" required/>
+
+            <label>Seats per Row</label>
+            <input type="number" th:field="*{seatsPerRow}" min="1" required/>
+
+            <button type="submit" class="btn btn-primary" style="margin-top:6px;">
+                Save Screen
+            </button>
+        </form>
+    </div>
+
+</div>
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>
